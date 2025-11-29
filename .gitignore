@@ -1,0 +1,21 @@
+# ============================
+# ENVIRONMENT VARIABLES
+# ============================
+.env
+.env.local
+.env.*.local
+
+# ============================
+# DATABASE (MariaDB volume)
+# ============================
+DB/db_data/
+db_data/
+*/db_data/
+
+# ============================
+# DOCKER
+# ============================
+# Ignore local docker volumes
+docker-compose.override.yml
+docker-data/
+.docker/
