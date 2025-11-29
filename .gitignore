@@ -1,9 +1,10 @@
 # ============================
 # ENVIRONMENT VARIABLES
 # ============================
+*.env
+*.env.*
 .env
-.env.local
-.env.*.local
+.env.*
 
 # ============================
 # DATABASE (MariaDB volume)
@@ -19,3 +20,8 @@ db_data/
 docker-compose.override.yml
 docker-data/
 .docker/
+
+# ============================
+# NODE / BACKEND (en caso de usar NodeJS)
+# ============================
+node_modules/
