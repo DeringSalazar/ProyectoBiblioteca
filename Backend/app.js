@@ -1,16 +1,16 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-
-
 import pool from './Database/db.js';
 import usersRoutes from './Routes/users.Routes.js';
+import categories from './Routes/categories.Routes.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
 app.use('/api/users', usersRoutes);
+app.use('/api/categories', categories);
 
 (async () => {
     try {
