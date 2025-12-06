@@ -41,28 +41,34 @@ class CodigosService {
   }
 
   async createCodigo(codigoData, userId) {
-    try {
-      if (!codigoData.titulo || !codigoData.codigo || !codigoData.lenguaje) {
-        throw new Error('Required fields: titulo, codigo, lenguaje');
-      }
-
-      const codigoToCreate = {
-        usuario_id: userId,
-        titulo: codigoData.titulo,
-        descripcion: codigoData.descripcion,
-        codigo: codigoData.codigo,
-        lenguaje: codigoData.lenguaje,
-        tags: codigoData.tags ? codigoData.tags.join(',') : null,
-        tipo: codigoData.tipo
-      };
-
-      const createdCodigo = await CodigosModel.createCodigo(codigoToCreate);
-      return createdCodigo;
-    } catch (error) {
-      console.error('Error creating code:', error);
-      throw error;
+  try {
+    if (!codigoData.titulo || !codigoData.codigo || !codigoData.lenguaje) {
+      throw new Error('Required fields: titulo, codigo, lenguaje');
     }
+
+    const codigoToCreate = {
+      usuario_id: userId,
+      titulo: codigoData.titulo,
+      descripcion: codigoData.descripcion || null,
+      codigo: codigoData.codigo,
+      lenguaje: codigoData.lenguaje,
+      tags: Array.isArray(codigoData.tags)
+        ? codigoData.tags.join(',')
+        : typeof codigoData.tags === 'string'
+          ? codigoData.tags
+          : null,
+      tipo: codigoData.tipo || null
+    };
+
+    const createdCodigo = await CodigosModel.createCodigo(codigoToCreate);
+    return createdCodigo;
+
+  } catch (error) {
+    console.error('Error creating code:', error);
+    throw error;
   }
+}
+
 
   async updateCodigo(id, codigoData, userId, userRole) {
     try {

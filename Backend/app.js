@@ -7,6 +7,7 @@ import usersRoutes from './Routes/users.Routes.js';
 import categories from './Routes/categories.Routes.js';
 import collectionsRoutes from './Routes/collections.Routes.js';
 import codigosRoutes from './Routes/codigos.Routes.js';
+import subscriptionsRoutes from './Routes/subscriptions.Routes.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -16,6 +17,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/categories', categories);
 app.use('/api/collections', collectionsRoutes);
 app.use('/api/codigos', codigosRoutes);
+app.use('/api/subscriptions', subscriptionsRoutes);
 app.use("/api/documentacion", Swagger.serve, Swagger.setup);
 
 (async () => {

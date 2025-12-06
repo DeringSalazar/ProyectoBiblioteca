@@ -62,42 +62,52 @@ class CodigosController {
   }
 
   async createCodigo(req, res) {
-    try {
-      const userId = req.user.id_usuario;
-      const { titulo, descripcion, codigo, lenguaje, tags, tipo } = req.body;
+  try {
+    const userId = req.user.id_usuario;
+    const { titulo, descripcion, codigo, lenguaje, tags, tipo } = req.body;
 
-      if (!titulo || !codigo || !lenguaje) {
-        return res.status(400).json({
-          success: false,
-          message: 'Campos requeridos: titulo, codigo, lenguaje'
-        });
-      }
-
-      const codigoData = {
-        titulo,
-        descripcion,
-        codigo,
-        lenguaje,
-        tags,
-        tipo
-      };
-
-      const createdCodigo = await CodigosService.createCodigo(codigoData, userId);
-
-      return res.status(201).json({
-        success: true,
-        message: 'Codigo creado exitosamente',
-        codigo: createdCodigo
-      });
-    } catch (error) {
-      console.error('Error en createCodigo:', error);
-      return res.status(500).json({
+    if (!titulo || !codigo || !lenguaje) {
+      return res.status(400).json({
         success: false,
-        message: 'Error creando el codigo',
-        error: error.message
+        message: 'Campos requeridos: titulo, codigo, lenguaje'
       });
     }
+
+    // Normalizar tags
+    let normalizedTags = null;
+
+    if (Array.isArray(tags)) {
+      normalizedTags = tags;
+    } else if (typeof tags === 'string') {
+      // Convierte string a array
+      normalizedTags = tags.split(',').map(t => t.trim());
+    }
+
+    const codigoData = {
+      titulo,
+      descripcion,
+      codigo,
+      lenguaje,
+      tags: normalizedTags,
+      tipo
+    };
+
+    const createdCodigo = await CodigosService.createCodigo(codigoData, userId);
+
+    return res.status(201).json({
+      success: true,
+      message: 'Codigo creado exitosamente',
+      codigo: createdCodigo
+    });
+  } catch (error) {
+    console.error('Error en createCodigo:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error creando el codigo',
+      error: error.message
+    });
   }
+}
 
   async updateCodigo(req, res) {
     const { id } = req.params;

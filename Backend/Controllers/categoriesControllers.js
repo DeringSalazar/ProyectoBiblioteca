@@ -98,6 +98,12 @@ class CategoriesController {
             });
         } catch (error) {
             console.error('Error in updateCategories:', error);
+            if (error.code === 'MISSING_DATA') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Missing required fields: id, nombre, descripcion, estado'
+                });
+            }
             if (error.code === 'DUPLICATE') {
                 return res.status(409).json({
                     success: false,

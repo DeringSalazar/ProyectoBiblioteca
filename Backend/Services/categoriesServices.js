@@ -1,4 +1,3 @@
-import e from "express";
 import categoriesModels from "../Models/categoriesModels.js";
 
 class CategoriesServices {

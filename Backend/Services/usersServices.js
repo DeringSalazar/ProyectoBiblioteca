@@ -33,7 +33,7 @@ const UsersService = {
 
   async login({ email, contrasena }) {
     if (!email || !contrasena) return null;
-    const user = await UsersModel.findByEmail(email);
+    const user = await UsersModel.login(email);
     if (!user) return null;
 
     const valid = await bcrypt.compare(contrasena, user.contrasena);
