@@ -9,13 +9,7 @@ const UsersModel = {
     return rows[0][0] || null;
   },
 
-  async findById(id) {
-    const [rows] = await pool.execute(
-      'SELECT id_usuario, nombre_completo, email, fecha_creacion, rol FROM usuarios WHERE id_usuario = ?',
-      [id]
-    );
-    return rows[0] || null;
-  },
+
 
   async create({ nombre_completo, email, contrasena, rol }) {
     await pool.execute(
