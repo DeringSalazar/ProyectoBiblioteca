@@ -9,6 +9,14 @@ const UsersModel = {
     return rows[0][0] || null;
   },
 
+  async findById(id) {
+    const [rows] = await pool.execute(
+      'CALL sp_usuarios_getid(?)',
+      [id]
+    );
+    return rows[0][0] || null;
+  },
+
   async login(email) {
     const [rows] = await pool.execute('CALL sp_login_usuario(?)', [email]);
     return rows[0][0] || null;

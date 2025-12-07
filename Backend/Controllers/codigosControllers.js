@@ -271,59 +271,6 @@ class CodigosController {
     }
   }
 
-  async removeCodigoFromColeccion(req, res) {
-    const { codigoId, coleccionId } = req.body;
-    try {
-      const userId = req.user.id_usuario;
-      const userRole = req.user.rol;
-
-      if (!codigoId || !coleccionId) {
-        return res.status(400).json({
-          success: false,
-          message: 'Campos requeridos: codigoId, coleccionId'
-        });
-      }
-
-      const deleted = await CodigosService.removeCodigoFromColeccion(codigoId, coleccionId, userId, userRole);
-
-      if (!deleted) {
-        return res.status(404).json({
-          success: false,
-          message: 'Codigo no encontrado en la coleccion'
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: 'Codigo removido de la coleccion correctamente'
-      });
-    } catch (error) {
-      console.error('Error in removeCodigoFromColeccion:', error);
-      
-      if (error.code === 'NOT_FOUND') {
-        return res.status(404).json({
-          success: false,
-          message: error.message,
-          error: error.message
-        });
-      }
-      
-      if (error.code === 'FORBIDDEN') {
-        return res.status(403).json({
-          success: false,
-          message: error.message,
-          error: error.message
-        });
-      }
-      
-      return res.status(500).json({
-        success: false,
-        message: 'Error removiendo el codigo de la coleccion',
-        error: error.message
-      });
-    }
-  }
-
   async getColeccionesByCodigoId(req, res) {
     const { id } = req.params;
     try {

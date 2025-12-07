@@ -9,53 +9,55 @@ const router = express.Router();
  * tags:
  *   name: Codigos
  *   description: Endpoints para gestionar Codigos
- *   post:
- *     summary: Crear nuevo código
- *     description: Crea un nuevo fragmento de código en la biblioteca personal
- *     tags:
- *       - Codigos
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - titulo
- *               - codigo
- *               - lenguaje
- *             properties:
- *               titulo:
- *                 type: string
- *                 example: "Función Suma"
- *               descripcion:
- *                 type: string
- *                 example: "Suma dos números"
- *               codigo:
- *                 type: string
- *                 example: "function suma(a, b) { return a + b; }"
- *               lenguaje:
- *                 type: string
- *                 example: "JavaScript"
- *               tags:
- *                 type: array
- *                 items:
+ * paths:
+ *   /codigos:
+ *     post:
+ *       summary: Crear nuevo código
+ *       description: Crea un nuevo fragmento de código en la biblioteca personal
+ *       tags:
+ *         - Codigos
+ *       security:
+ *         - bearerAuth: []
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - titulo
+ *                 - codigo
+ *                 - lenguaje
+ *               properties:
+ *                 titulo:
  *                   type: string
- *                 example: ["javascript", "math"]
- *               tipo:
- *                 type: string
- *                 example: "function"
- *     responses:
- *       201:
- *         description: Código creado exitosamente
- *       400:
- *         description: Campos requeridos faltantes
- *       401:
- *         description: Token inválido o expirado
- *       500:
- *         description: Error del servidor
+ *                   example: "Función Suma"
+ *                 descripcion:
+ *                   type: string
+ *                   example: "Suma dos números"
+ *                 codigo:
+ *                   type: string
+ *                   example: "function suma(a, b) { return a + b; }"
+ *                 lenguaje:
+ *                   type: string
+ *                   example: "JavaScript"
+ *                 tags:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["javascript", "math"]
+ *                 tipo:
+ *                   type: string
+ *                   example: "function"
+ *       responses:
+ *         '201':
+ *           description: Código creado exitosamente
+ *         '400':
+ *           description: Campos requeridos faltantes
+ *         '401':
+ *           description: Token inválido o expirado
+ *         '500':
+ *           description: Error del servidor
  */
 router.post('/', authMiddleware, CodigosController.createCodigo.bind(CodigosController));
 
@@ -253,46 +255,6 @@ router.delete('/:id', authMiddleware, CodigosController.deleteCodigo.bind(Codigo
  *         description: Error del servidor
  */
 router.post('/colecciones/add', authMiddleware, CodigosController.addCodigoToColeccion.bind(CodigosController));
-
-/**
- * @swagger
- * /codigos/colecciones/remove:
- *   post:
- *     summary: Remover código de colección
- *     description: Elimina un código de una colección
- *     tags:
- *       - Codigos
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - codigoId
- *               - coleccionId
- *             properties:
- *               codigoId:
- *                 type: integer
- *                 example: 1
- *               coleccionId:
- *                 type: integer
- *                 example: 1
- *     responses:
- *       200:
- *         description: Código removido de colección exitosamente
- *       404:
- *         description: Código o colección no encontrado
- *       403:
- *         description: Acceso denegado
- *       401:
- *         description: Token inválido o expirado
- *       500:
- *         description: Error del servidor
- */
-router.post('/colecciones/remove', authMiddleware, CodigosController.removeCodigoFromColeccion.bind(CodigosController));
 
 /**
  * @swagger

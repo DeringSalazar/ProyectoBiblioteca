@@ -120,20 +120,6 @@ class CodigosModel {
     }
   }
 
-  async removeCodigoFromColeccion(codigoId, coleccionId) {
-    try {
-      const [result] = await pool.execute(
-        `DELETE FROM coleccion_codigo
-         WHERE codigo_id = ? AND coleccion_id = ?`,
-        [codigoId, coleccionId]
-      );
-      return result.affectedRows > 0;
-    } catch (error) {
-      console.error('Error removing code from collection:', error);
-      throw error;
-    }
-  }
-
   async getColeccionesByCodigoId(codigoId) {
     try {
       const [rows] = await pool.execute(

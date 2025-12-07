@@ -170,36 +170,6 @@ class CodigosService {
     }
   }
 
-  async removeCodigoFromColeccion(codigoId, coleccionId, userId, userRole) {
-    try {
-      const codigo = await CodigosModel.getCodigoById(codigoId);
-      if (!codigo) {
-        const error = new Error('Code not found');
-        error.code = 'NOT_FOUND';
-        throw error;
-      }
-
-      const coleccion = await CollectionsModel.getCollectionById(coleccionId);
-      if (!coleccion) {
-        const error = new Error('Collection not found');
-        error.code = 'NOT_FOUND';
-        throw error;
-      }
-
-      // Check if user is the collection owner or admin
-      if (coleccion.usuario_id !== userId && userRole !== 'admin') {
-        const error = new Error('You can only remove codes from your own collections');
-        error.code = 'FORBIDDEN';
-        throw error;
-      }
-
-      const deleted = await CodigosModel.removeCodigoFromColeccion(codigoId, coleccionId);
-      return deleted;
-    } catch (error) {
-      console.error('Error removing code from collection:', error);
-      throw error;
-    }
-  }
 
   async getColeccionesByCodigoId(codigoId, userId, userRole) {
     try {

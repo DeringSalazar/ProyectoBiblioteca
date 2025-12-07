@@ -1,4 +1,5 @@
 import CollectionsService from '../Services/collectionsServices.js';
+import CodigosService from '../Services/codigosServices.js';
 
 class CollectionsController {
 
@@ -201,6 +202,14 @@ class CollectionsController {
         });
       }
 
+      //Verificar que exisa el snippet antes de agregarlo a la coleccion
+      const snippetExists = await CodigosService.getCodigoById(snippet_id);
+      if (!snippetExists) {
+        return res.status(404).json({
+          success: false,
+          message: 'Snippet not found'
+        });
+      }
       const result = await CollectionsService.addSnippetToCollection(
         id, 
         snippet_id, 
