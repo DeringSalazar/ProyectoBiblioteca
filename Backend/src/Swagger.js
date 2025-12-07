@@ -23,12 +23,7 @@ const swaggerDefinition = {
                 description: "Token JWT"
             }
         }
-    },
-     security: [             
-        {
-            bearerAuth: []
-        }
-    ]
+    }
 };
 
 const options = {

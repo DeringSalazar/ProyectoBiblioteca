@@ -6,6 +6,9 @@ const router = express.Router();
 
 /**
  * @swagger
+ * components:
+ *   x-internal: true
+ * info:
  * tags:
  *   name: Codigos
  *   description: Endpoints para gestionar Codigos

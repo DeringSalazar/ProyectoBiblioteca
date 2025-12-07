@@ -5,13 +5,11 @@ class CodigosModel {
   async getCodigosByUserId(userId) {
     try {
       const [rows] = await pool.execute(
-        `SELECT id, usuario_id, titulo, descripcion, lenguaje, tags, tipo
-         FROM codigo
-         WHERE usuario_id = ?
-         ORDER BY id DESC`,
+        `CALL sp_codigo_by_usuario(?)`,
         [userId]
       );
-      return rows;
+      // Los procedimientos almacenados retornan [resultSet, fields]
+      return Array.isArray(rows) && rows.length > 0 ? rows : [];
     } catch (error) {
       console.error('Error finding codes by user ID:', error);
       throw error;
@@ -21,12 +19,10 @@ class CodigosModel {
   async getCodigoById(id) {
     try {
       const [rows] = await pool.execute(
-        `SELECT id, usuario_id, titulo, descripcion, codigo, lenguaje, tags, tipo
-         FROM codigo
-         WHERE id = ?`,
+        `CALL sp_codigo_getid(?)`,
         [id]
       );
-      return rows[0];
+      return Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
     } catch (error) {
       console.error('Error finding code by ID:', error);
       throw error;
@@ -39,12 +35,16 @@ class CodigosModel {
     }
     const { usuario_id, titulo, descripcion, codigo, lenguaje, tags, tipo } = codigoData;
     try {
-      const [result] = await pool.execute(
-        `INSERT INTO codigo (usuario_id, titulo, descripcion, codigo, lenguaje, tags, tipo)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      await pool.execute(
+        `CALL sp_codigo_create(?, ?, ?, ?, ?, ?, ?)`,
         [usuario_id, titulo, descripcion || null, codigo, lenguaje, tags || null, tipo || null]
       );
-      return this.getCodigoById(result.insertId);
+      // Obtener el código creado
+      const [lastCode] = await pool.execute(
+        `SELECT * FROM codigo WHERE usuario_id = ? ORDER BY id DESC LIMIT 1`,
+        [usuario_id]
+      );
+      return lastCode[0];
     } catch (error) {
       console.error('Error creating code:', error);
       throw error;
@@ -58,10 +58,8 @@ class CodigosModel {
     const { titulo, descripcion, codigo, lenguaje, tags, tipo } = codigoData;
     try {
       await pool.execute(
-        `UPDATE codigo
-         SET titulo = ?, descripcion = ?, codigo = ?, lenguaje = ?, tags = ?, tipo = ?
-         WHERE id = ?`,
-        [titulo, descripcion || null, codigo, lenguaje, tags || null, tipo || null, id]
+        `CALL sp_codigo_update(?, ?, ?, ?, ?, ?, ?)`,
+        [id, titulo, descripcion || null, codigo, lenguaje, tags || null, tipo || null]
       );
       return this.getCodigoById(id);
     } catch (error) {
@@ -72,18 +70,16 @@ class CodigosModel {
 
   async deleteCodigo(id) {
     try {
-      // Delete relationships in coleccion_codigo table first
       await pool.execute(
         `DELETE FROM coleccion_codigo WHERE codigo_id = ?`,
         [id]
       );
       
-      // Delete the code
-      const [result] = await pool.execute(
-        `DELETE FROM codigo WHERE id = ?`,
+      await pool.execute(
+        `CALL sp_codigo_delete(?)`,
         [id]
       );
-      return result.affectedRows > 0;
+      return true;
     } catch (error) {
       console.error('Error deleting code:', error);
       throw error;
@@ -93,12 +89,10 @@ class CodigosModel {
   async getCodigosByTag(tag) {
     try {
       const [rows] = await pool.execute(
-        `SELECT id, usuario_id, titulo, descripcion, lenguaje, tags, tipo
-         FROM codigo
-         WHERE FIND_IN_SET(?, tags) > 0`,
+        `CALL sp_codigo_by_categoria(?)`,
         [tag]
       );
-      return rows;
+      return Array.isArray(rows) && rows.length > 0 ? rows : [];
     } catch (error) {
       console.error('Error finding codes by tag:', error);
       throw error;
@@ -107,13 +101,11 @@ class CodigosModel {
 
   async addCodigoToColeccion(codigoId, coleccionId) {
     try {
-      const [result] = await pool.execute(
-        `INSERT INTO coleccion_codigo (coleccion_id, codigo_id, fecha_agregado)
-         VALUES (?, ?, NOW())
-         ON DUPLICATE KEY UPDATE fecha_agregado = NOW()`,
+      await pool.execute(
+        `CALL sp_colecciones_add_snippet(?, ?)`,
         [coleccionId, codigoId]
       );
-      return result;
+      return { success: true };
     } catch (error) {
       console.error('Error adding code to collection:', error);
       throw error;
@@ -122,17 +114,27 @@ class CodigosModel {
 
   async getColeccionesByCodigoId(codigoId) {
     try {
+      // Este método obtiene las CATEGORÍAS de un código
       const [rows] = await pool.execute(
-        `SELECT c.id, c.usuario_id, c.nombre, c.descripcion, c.visibilidad, cc.fecha_agregado
-         FROM colecciones c
-         INNER JOIN coleccion_codigo cc ON c.id = cc.coleccion_id
-         WHERE cc.codigo_id = ?
-         ORDER BY cc.fecha_agregado DESC`,
+        `CALL sp_categorias_get_codigos(?)`,
         [codigoId]
       );
-      return rows;
+      return Array.isArray(rows) && rows.length > 0 ? rows : [];
     } catch (error) {
-      console.error('Error finding collections by code ID:', error);
+      console.error('Error finding categories for code:', error);
+      throw error;
+    }
+  }
+
+  async removeCodigoFromColeccion(codigoId, coleccionId) {
+    try {
+      await pool.execute(
+        `CALL sp_colecciones_remove_snippet(?, ?)`,
+        [coleccionId, codigoId]
+      );
+      return { success: true };
+    } catch (error) {
+      console.error('Error removing code from collection:', error);
       throw error;
     }
   }
