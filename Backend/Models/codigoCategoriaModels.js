@@ -34,7 +34,7 @@ class CodigoCategoriaModel {
         `CALL sp_codigo_get_categorias(?)`,
         [codigoId]
       );
-      return Array.isArray(rows) && rows.length > 0 ? rows : [];
+      return Array.isArray(rows) && rows.length > 0 ? rows[0] : [];
     } catch (error) {
       console.error('Error getting categories from code:', error);
       throw error;
@@ -47,7 +47,7 @@ class CodigoCategoriaModel {
         `CALL sp_categorias_get_codigos(?)`,
         [categoriaId]
       );
-      return Array.isArray(rows) && rows.length > 0 ? rows : [];
+      return Array.isArray(rows) && rows.length > 0 ? rows[0] : [];
     } catch (error) {
       console.error('Error getting codes from category:', error);
       throw error;

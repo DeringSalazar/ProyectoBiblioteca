@@ -13,7 +13,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/codigos-categorias/add:
+ * /codigos-categorias/add:
  *   post:
  *     summary: Agregar código a una categoría
  *     description: Asocia un código a una categoría específica
@@ -61,7 +61,7 @@ router.post('/add', authMiddleware, CodigoCategoriaController.addCodigoToCategor
 
 /**
  * @swagger
- * /api/codigos-categorias/remove:
+ * /codigos-categorias/remove:
  *   post:
  *     summary: Remover código de una categoría
  *     description: Desasocia un código de una categoría específica
@@ -109,7 +109,7 @@ router.post('/remove', authMiddleware, CodigoCategoriaController.removeCodigoFro
 
 /**
  * @swagger
- * /api/codigos-categorias/codigo/{codigoId}:
+ * /codigos-categorias/codigo/{codigoId}:
  *   get:
  *     summary: Obtener categorías de un código
  *     description: Retorna todas las categorías asociadas a un código específico
@@ -156,7 +156,7 @@ router.get('/codigo/:codigoId', authMiddleware, CodigoCategoriaController.getCat
 
 /**
  * @swagger
- * /api/codigos-categorias/categoria/{categoriaId}:
+ * /codigos-categorias/categoria/{categoriaId}:
  *   get:
  *     summary: Obtener códigos de una categoría
  *     description: Retorna todos los códigos asociados a una categoría específica

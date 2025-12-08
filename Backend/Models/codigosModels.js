@@ -9,7 +9,7 @@ class CodigosModel {
         [userId]
       );
       // Los procedimientos almacenados retornan [resultSet, fields]
-      return Array.isArray(rows) && rows.length > 0 ? rows : [];
+      return Array.isArray(rows) && rows.length > 0 ? rows[0] : [];
     } catch (error) {
       console.error('Error finding codes by user ID:', error);
       throw error;
@@ -92,7 +92,7 @@ class CodigosModel {
         `CALL sp_codigo_by_categoria(?)`,
         [tag]
       );
-      return Array.isArray(rows) && rows.length > 0 ? rows : [];
+      return Array.isArray(rows) && rows.length > 0 ? rows[0] : [];
     } catch (error) {
       console.error('Error finding codes by tag:', error);
       throw error;

@@ -76,7 +76,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/subscriptions/user/{id}:
+ * /subscriptions/user/{id}:
  *   get:
  *     summary: Obtener la suscripción de un usuario
  *     tags: [Subscriptions]
@@ -108,7 +108,7 @@ router.get('/user/:id', subscriptionsController.getSubscriptionByUser);
 
 /**
  * @swagger
- * /api/subscriptions/{id}:
+ * /subscriptions/{id}:
  *   get:
  *     summary: Obtener una suscripción por su ID
  *     tags: [Subscriptions]
@@ -140,7 +140,7 @@ router.get('/:id', subscriptionsController.getSubscriptionById);
 
 /**
  * @swagger
- * /api/subscriptions/feed/user/{id}:
+ * /subscriptions/feed/user/{id}:
  *   get:
  *     summary: Obtener el feed basado en las suscripciones de un usuario
  *     tags: [Subscriptions]
@@ -172,7 +172,7 @@ router.get('/feed/user/:id', subscriptionsController.getFeedByUser);
 
 /**
  * @swagger
- * /api/subscriptions:
+ * /subscriptions:
  *   post:
  *     summary: Crear una nueva suscripción
  *     tags: [Subscriptions]
@@ -196,7 +196,7 @@ router.post('/', subscriptionsController.createSubscription);
 
 /**
  * @swagger
- * /api/subscriptions:
+ * /subscriptions:
  *   put:
  *     summary: Actualizar una suscripción
  *     tags: [Subscriptions]
@@ -225,7 +225,7 @@ router.put('/', subscriptionsController.updateSubscription);
 
 /**
  * @swagger
- * /api/subscriptions/{id}:
+ * /subscriptions/{id}:
  *   delete:
  *     summary: Eliminar una suscripción
  *     tags: [Subscriptions]
