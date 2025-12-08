@@ -46,6 +46,9 @@ const router = Router();
  *           type: string
  *         descripcion:
  *           type: string
+ *         visibilidad:
+ *           type: string
+ *           enum: [publica, privada]
  *
  *     Snippet:
  *       type: object
