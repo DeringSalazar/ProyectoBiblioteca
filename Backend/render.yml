@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: proyecto-biblioteca-backend
+    env: node
+    buildcommands: "npm install
+    srartcommand: "npm start"
+    rootDir: "Backend"
+    plan: free
