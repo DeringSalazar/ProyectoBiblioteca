@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import subscriptionsController from '../Controllers/subscriptionsControllers.js';
+import { authMiddleware } from '../Middleware/authMiddleware.js';
 const router = Router();
 
 /**
@@ -73,6 +74,7 @@ const router = Router();
  *         error:
  *           type: string
  */
+router.use(authMiddleware);
 
 /**
  * @swagger
