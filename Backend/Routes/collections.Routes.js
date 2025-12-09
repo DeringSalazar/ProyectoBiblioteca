@@ -2,7 +2,8 @@ import { Router } from "express";
 import CollectionsController from "../Controllers/collectionsControllers.js";
 import { authMiddleware } from "../Middleware/authMiddleware.js";
 import { createCollectionValidator } from "../Validators/createCollectionValidator.js";
-import { validate } from "../Middleware/validateMiddleware.js";
+import { updateCollectionValidator } from "../Validators/updateCollectionValidator.js";
+import { validate } from '../Middleware/validateMiddleware.js';
 
 const router = Router();
 
@@ -36,8 +37,14 @@ const router = Router();
  *       properties:
  *         nombre:
  *           type: string
+ *           example: "Coleccion PHP"
  *         descripcion:
  *           type: string
+ *           example: ""
+ *         visibilidad:
+ *           type: string
+ *           enum: [publica, privada]
+ *            
  *
  *     UpdateCollection:
  *       type: object
@@ -176,7 +183,7 @@ router.get("/:id", CollectionsController.getCollectionById);
  *       500:
  *         description: Error interno del servidor
  */
-router.put("/:id", CollectionsController.updateCollection);
+router.put("/:id", updateCollectionValidator, validate, CollectionsController.updateCollection);
 
 /**
  * @swagger
