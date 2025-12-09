@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
-    title: "Documentación API",
+    title: "Biblioteca horientada a codigos",
     version: "1.0.0",
     description:
       "Documentancion de la ruta de la API, (Por JSONeros del conocimiento)",
