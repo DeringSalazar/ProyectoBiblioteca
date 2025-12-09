@@ -1,9 +1,22 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
+import { logEvent } from '../utils/logger.js';
 import UsersController from '../Controllers/usersControllers.js';
 import { authMiddleware } from '../Middleware/authMiddleware.js';
 import { allowRoles } from '../Middleware/roleMiddleware.js';
 
 const router = express.Router();
+
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000, 
+  max: 5,
+  message: {
+    error: 'Demasiados intentos de inicio de sesión. Intente nuevamente en 1 minuto.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 
 /**
  * @swagger
@@ -127,7 +140,16 @@ router.post('/', UsersController.register);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', UsersController.login);
+router.post('/login', loginLimiter, async (req, res) => {
+  try {
+    const response = await UsersController.login(req, res);
+    logEvent(`LOGIN OK: ${req.body.email}`);
+    return response; 
+  } catch (err) {
+    logEvent(`LOGIN FAIL: ${req.body.email}`);
+    return res.status(401).json({ error: err.message });
+  }
+});
 
 /**
  * @swagger
